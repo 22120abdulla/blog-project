@@ -4,12 +4,12 @@ import { images } from "../constants";
 const Header = () => {
   return (
     <section>
-      <header className="container mx-auto px-5 flex justify-between py-4">
+      <header className="container mx-auto px-5 flex justify-between py-4 items-center">
         <div>
           <img src={images.Logo} alt="logo" />
         </div>
-        <div className='flex gap-x-9'>
-          <ul className='flex gap-x-5'>
+        <div className='flex gap-x-9 items-center'>
+          <ul className='flex gap-x-5 font-semibold'>
             <li>
               <a href="/">Home</a>
             </li>
