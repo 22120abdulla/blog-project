@@ -41,7 +41,7 @@ const SuggestedPosts = ({ className, header, posts = [], tags }) => {
           <Link
           key={index} 
           to="/" 
-          className="inline-block rounded-md px-3 py-1.5 bg-primary font-roboto text-xs text-white md:text-sm"
+           className="inline-block rounded-md px-3 py-1.5 bg-primary font-roboto text-xs text-white md:text-sm"
           >
             {item}
           </Link>
