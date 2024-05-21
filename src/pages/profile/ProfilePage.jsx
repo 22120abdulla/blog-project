@@ -3,23 +3,20 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
 import MainLayout from "../../components/MainLayout";
 import { getUserProfile, updateProfile } from "../../services/index/users";
 import ProfilePicture from "../../components/ProfilePicture";
 import { userActions } from "../../store/reducers/userReducers";
 import { toast } from "react-hot-toast";
-
 const ProfilePage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
   const userState = useSelector((state) => state.user);
-
   const {
     data: profileData,
     isLoading: profileIsLoading,
-
+    error: profileError,
   } = useQuery({
     queryFn: () => {
       return getUserProfile({ token: userState.userInfo.token });
@@ -27,7 +24,7 @@ const ProfilePage = () => {
     queryKey: ["profile"],
   });
 
-  const { mutate, isLoading } = useMutation({
+  const { mutate, isLoading: updateProfileIsLoading } = useMutation({
     mutationFn: ({ name, email, password }) => {
       return updateProfile({
         token: userState.userInfo.token,
@@ -45,13 +42,11 @@ const ProfilePage = () => {
       console.log(error);
     },
   });
-
   useEffect(() => {
     if (!userState.userInfo) {
       navigate("/");
     }
   }, [navigate, userState.userInfo]);
-
   const {
     register,
     handleSubmit,
@@ -68,18 +63,14 @@ const ProfilePage = () => {
     },
     mode: "onChange",
   });
-
   const submitHandler = (data) => {
     const { name, email, password } = data;
     mutate({ name, email, password });
   };
-
   return (
     <MainLayout>
-      {isLoading && <div></div>}
       <section className="container mx-auto px-5 py-10">
         <div className="w-full max-w-sm mx-auto">
-        <p>{profileData?.name}</p>
           <ProfilePicture avatar={profileData?.avatar} />
           <form onSubmit={handleSubmit(submitHandler)}>
             <div className="flex flex-col mb-6 w-full">
@@ -169,10 +160,10 @@ const ProfilePage = () => {
             </div>
             <button
               type="submit"
-              disabled={!isValid || profileIsLoading}
+              disabled={!isValid || profileIsLoading || updateProfileIsLoading}
               className="bg-primary text-white font-bold text-lg py-4 px-8 w-full rounded-lg mb-6 disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              Register
+              Update
             </button>
           </form>
         </div>
@@ -180,5 +171,4 @@ const ProfilePage = () => {
     </MainLayout>
   );
 };
-
 export default ProfilePage;
